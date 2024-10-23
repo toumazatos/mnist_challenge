@@ -14,8 +14,8 @@ import tensorflow as tf
 import numpy as np
 from tensorflow.examples.tutorials.mnist import input_data
 
-from model import Model
-from pgd_attack import LinfPGDAttack
+from model_new import Model
+from pgd_attack_new import LinfPGDAttack
 
 with open('config.json') as config_file:
     config = json.load(config_file)
