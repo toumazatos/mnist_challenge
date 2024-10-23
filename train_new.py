@@ -23,6 +23,10 @@ x_train, x_test = x_train / 255.0, x_test / 255.0
 x_train = x_train.reshape(-1, 28*28)  # Flatten images
 x_test = x_test.reshape(-1, 28*28)
 
+# Convert the dataset to tensors
+x_train = tf.convert_to_tensor(x_train, dtype=tf.float32)
+y_train = tf.convert_to_tensor(y_train, dtype=tf.int64)
+
 # Set up model
 model = Model()
 
@@ -46,7 +50,7 @@ if not os.path.exists(model_dir):
 for step in range(max_num_training_steps):
     # Get a random batch
     indices = np.random.randint(0, x_train.shape[0], batch_size)
-    x_batch, y_batch = x_train[indices], y_train[indices]
+    x_batch, y_batch = tf.gather(x_train, indices), tf.gather(y_train, indices)
 
     # Compute adversarial perturbations
     start = timer()
