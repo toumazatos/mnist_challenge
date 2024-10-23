@@ -69,4 +69,6 @@ for step in range(max_num_training_steps):
         print(f"Step {step}: Loss = {loss_value.numpy()}")
 
     if step % config['num_checkpoint_steps'] == 0:
-        model.save_weights(os.path.join(model_dir, f'checkpoint_{step}.h5'))
+        # Modify the checkpoint filename to follow the required convention
+        model.save_weights(os.path.join(model_dir, f'checkpoint_{step}.weights.h5'))
+
