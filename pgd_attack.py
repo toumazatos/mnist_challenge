@@ -49,6 +49,8 @@ class LinfPGDAttack:
     else:
       x = np.copy(x_nat)
 
+    losses = []
+    predictions = []
     for i in range(self.k):
       grad = sess.run(self.grad, feed_dict={self.model.x_input: x,
                                             self.model.y_input: y})
@@ -57,6 +59,17 @@ class LinfPGDAttack:
 
       x = np.clip(x, x_nat - self.epsilon, x_nat + self.epsilon) 
       x = np.clip(x, 0, 1) # ensure valid pixel range
+
+      # Calculate and store loss for each step
+      loss_value = sess.run(self.model.xent, feed_dict={self.model.x_input: x, self.model.y_input: y})
+      losses.append(loss_value)  # Record loss
+
+      # Store predictions at each step
+      pred = sess.run(self.model.y_pred, feed_dict={self.model.x_input: x})
+      predictions.append(pred)
+
+    print(f"Xetropy_losses = {losses}")
+    print(f"adv_predictions = {predictions}")
 
     return x
 
