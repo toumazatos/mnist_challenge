@@ -1,8 +1,8 @@
 import tensorflow as tf
 import numpy as np
 from tensorflow.keras.datasets import mnist
-from model import Model
-from pgd_attack import LinfPGDAttack
+from model_new import Model
+from pgd_attack_new import LinfPGDAttack
 import json
 from datetime import datetime
 from timeit import default_timer as timer
