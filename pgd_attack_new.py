@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 from tensorflow.keras.datasets import mnist
-from model import Model
+from model_new import Model
 import json
 
 class LinfPGDAttack:
