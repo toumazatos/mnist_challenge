@@ -40,7 +40,7 @@ class LinfPGDAttack:
             x = tf.clip_by_value(x, 0, 1)  # Ensure valid pixel range
             
             losses.append(loss.numpy())
-            predictions.append(np.argmax(logits, axis=1).numpy())
+            predictions.append(tf.argmax(logits, axis=1).numpy())  # Use tf.argmax instead of np.argmax
 
         print(f"Losses: {losses}")
         print(f"Predictions: {predictions}")
