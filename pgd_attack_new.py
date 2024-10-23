@@ -14,10 +14,16 @@ class LinfPGDAttack:
         self.loss_func = loss_func
 
     def perturb(self, x_nat, y):
-        x = np.copy(x_nat)
+        # Convert input to TensorFlow tensors
+        x_nat = tf.convert_to_tensor(x_nat, dtype=tf.float32)
+        y = tf.convert_to_tensor(y, dtype=tf.int64)
+        
         if self.rand:
-            x = x_nat + np.random.uniform(-self.epsilon, self.epsilon, x_nat.shape)
-            x = np.clip(x, 0, 1)  # Ensure valid pixel range
+            x = x_nat + tf.random.uniform(tf.shape(x_nat), -self.epsilon, self.epsilon)
+        else:
+            x = tf.identity(x_nat)
+        
+        x = tf.clip_by_value(x, 0, 1)  # Ensure valid pixel range
 
         losses = []
         predictions = []
@@ -29,12 +35,12 @@ class LinfPGDAttack:
                 loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(labels=y, logits=logits))
             
             grad = tape.gradient(loss, x)
-            x = x + self.a * np.sign(grad)
-            x = np.clip(x, x_nat - self.epsilon, x_nat + self.epsilon)  # Stay within epsilon bounds
-            x = np.clip(x, 0, 1)  # Ensure valid pixel range
+            x = x + self.a * tf.sign(grad)
+            x = tf.clip_by_value(x, x_nat - self.epsilon, x_nat + self.epsilon)  # Stay within epsilon bounds
+            x = tf.clip_by_value(x, 0, 1)  # Ensure valid pixel range
             
             losses.append(loss.numpy())
-            predictions.append(np.argmax(logits, axis=1))
+            predictions.append(np.argmax(logits, axis=1).numpy())
 
         print(f"Losses: {losses}")
         print(f"Predictions: {predictions}")
